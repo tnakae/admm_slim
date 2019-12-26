@@ -1,14 +1,14 @@
-import abc
+import numpy as np
 
-class BaseSlimModel(abc.ABC):
-    @abc.abstractclassmethod
+
+class BaseSlimModel(object):
     def fit(self, X):
-        pass
+        self.coef = np.identity(X.shape[1])
 
-    @abc.abstractclassmethod
     def predict(self, X):
-        pass
+        return X.dot(self.coef)
 
-    @abc.abstractclassmethod
-    def recommend(self, X):
-        pass
+    def recommend(self, X, top=20):
+        scores = self.predict(X)
+        top_items = np.argsort(scores, axis=1)[:, -top:]
+        return top_items
